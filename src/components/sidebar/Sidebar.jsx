@@ -2,7 +2,7 @@ import './sidebar.css'
 
 export default function Sidebar() {
     return (
-        <div className='sideBar'>
+        <div className='sidebar'>
             <div className="sidebarItem">
                 <span className="sidebarTitle">About Me</span>
                 <img src="https://smoothmove.co.za/wp-content/uploads/2021/02/pp1-660x371.jpg" alt="" />

@@ -1,31 +1,46 @@
+import { useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import axios from 'axios'
 import './singlePost.css'
 
 export default function SinglePost() {
+    const { pathname } = useLocation();
+    const postID = pathname.split('/')[2];
+    const [post, setPost] = useState({});
+
+    useEffect(() => {
+        const getPost = async () => {
+            const res = await axios.get('/posts/' + postID);
+            setPost(res.data);
+        };
+        getPost();
+    }, [postID])
+
     return (
         <div className='singlePost'>
             <div className="singlePostWrapper">
-                <img src="https://cdn.concreteplayground.com/content/uploads/2020/09/smalltalk-trentvanderjagt-buffet2-1920x1440.jpg" alt="" className="singlePostImg" />
+            {post.photo && 
+                <img src={post.photo} alt="" className="singlePostImg" />
+            }
             </div>
             <h1 className="singlePostTitle">
-                Lorem, ipsum dolor sit
+                {post.title}
                 <div className="singlePostEdit">
                     <i className="singlePostIcon far fa-edit"></i>
                     <i className="singlePostIcon far fa-trash-alt"></i>
                 </div>
             </h1>
             <div className="singlePostInfo">
-                <span className='singlePostAuthor'>Author: <b>Yasir Asiri</b></span>
-                <span className="singlePostDate">1 hour ago</span>
+                <span className='singlePostAuthor'>Author:
+                 <Link to={`/?user=${post.username}`} className='link'>
+                 <b>{post.username}</b>
+                 </Link>
+                 </span>
+                <span className="singlePostDate">{new Date (post.createdAt).toDateString()}</span>
             </div>
             <p className='singlePostDesc'>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate blanditiis facere praesentium! Harum praesentium beatae doloribus illo ab unde libero accusamus soluta sunt delectus error quis optio, recusandae nesciunt a.
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate blanditiis facere praesentium! Harum praesentium beatae doloribus illo ab unde libero accusamus soluta sunt delectus error quis optio, recusandae nesciunt a.
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate blanditiis facere praesentium! Harum praesentium beatae doloribus illo ab unde libero accusamus soluta sunt delectus error quis optio, recusandae nesciunt a.
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate blanditiis facere praesentium! Harum praesentium beatae doloribus illo ab unde libero accusamus soluta sunt delectus error quis optio, recusandae nesciunt a.
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate blanditiis facere praesentium! Harum praesentium beatae doloribus illo ab unde libero accusamus soluta sunt delectus error quis optio, recusandae nesciunt a.
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate blanditiis facere praesentium! Harum praesentium beatae doloribus illo ab unde libero accusamus soluta sunt delectus error quis optio, recusandae nesciunt a.
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate blanditiis facere praesentium! Harum praesentium beatae doloribus illo ab unde libero accusamus soluta sunt delectus error quis optio, recusandae nesciunt a.
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptate blanditiis facere praesentium! Harum praesentium beatae doloribus illo ab unde libero accusamus soluta sunt delectus error quis optio, recusandae nesciunt a.
+                {post.desc}
             </p>
         </div>
     )

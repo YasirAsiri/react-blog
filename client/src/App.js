@@ -5,7 +5,7 @@ import Write from './components/write/Write';
 import Settings from './pages/settings/Settings';
 import Login from './pages/login/Login';
 import Register from './pages/register/Register';
-import {BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
 
 
@@ -23,7 +23,6 @@ function App() {
       </Route>
       <Route path='/register'>
         {user ? <Home /> : <Register />}
-        <Register />
       </Route>
       <Route path='/write'>
         {user ? <Write /> : <Login />}

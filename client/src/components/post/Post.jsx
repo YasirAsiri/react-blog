@@ -1,26 +1,29 @@
 import { Link } from 'react-router-dom'
 import './post.css'
 
-export default function Post() {
+export default function Post({post}) {
     return (
         <div className='post'>
-            <img src="https://smoothmove.co.za/wp-content/uploads/2021/02/pp1-660x371.jpg" alt="" className="postImg" />
+            {post.photo && (
+                <img src={post.photo} alt="" className="postImg" />
+            )}
             <div className="postInfo">
                 <div className="postCats">
-                    <span className="postCat">Music</span>
-                    <span className="postCat">Life</span>
+                {post.categories.map((c) => (
+                    <span className="postCat">{c.name}</span>
+                ))}
                 </div>
-                <span className="postTitle">
-                    <Link className='link' to='/post/45'>Lorem ipsum, dolor sit amet</Link>
-                </span>
+                
+                <Link className='link' to={`/post/${post._id}`}>
+                <span className="postTitle">{post.title}</span>
+                </Link>
+                
                 <span className="postDate">
-                    1 hour ago
+                {new Date (post.createdAt).toDateString()}
                 </span>
             </div>
             <p className="postDesc">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta explicabo illum magnam tempore ipsum. Quam adipisci nemo sit quo necessitatibus distinctio quasi architecto, est in. Praesentium soluta commodi incidunt voluptatibus.
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta explicabo illum magnam tempore ipsum. Quam adipisci nemo sit quo necessitatibus distinctio quasi architecto, est in. Praesentium soluta commodi incidunt voluptatibus.
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta explicabo illum magnam tempore ipsum. Quam adipisci nemo sit quo necessitatibus distinctio quasi architecto, est in. Praesentium soluta commodi incidunt voluptatibus.
+            {post.desc}
             </p>
         </div>
     )

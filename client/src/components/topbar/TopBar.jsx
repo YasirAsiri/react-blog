@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom'
+import { useContext  } from 'react'
+import { Context } from '../../context/Context';
 import './topBar.css'
 
 export default function TopBar() {
-    const user = false
+    const {user, dispatch} = useContext(Context);
+    const handleLogout = () => {
+        dispatch({ type: 'LOGOUT'});
+    };
+    
     return (
         <div className="top">
             <div className='topLeft'>
@@ -25,8 +31,8 @@ export default function TopBar() {
                     <li className="topListItem">
                     <Link className='link' to='/write'>Write</Link>
                     </li>
-                    <li className="topListItem">
-                    <Link className='link' to='/'>{user && 'Logout'}</Link>
+                    <li className="topListItem" onClick={handleLogout}>
+                    <Link className='link' to='/login'>{user && 'Logout'}</Link>
                     </li>
                 </ul>
 
@@ -34,7 +40,7 @@ export default function TopBar() {
             <div className='topRight'>
             {
                 user ? (
-                    <img src="https://mobirise.com/bootstrap-template/profile-template/assets/images/timothy-paul-smith-256424-1200x800.jpg" alt="" className="topImage"/>
+                    <img src={user.profilePic} alt="" className="topImage"/>
                 ) : (
                     <ul className='topList'>
                         <li className="topListItem">

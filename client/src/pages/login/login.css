@@ -38,6 +38,10 @@
     padding: 10px;
 }
 
+.loginBtn:disabled {
+    background: rgb(221, 165, 165);
+}
+
 .loginRegisterBtn {
     position: absolute;
     top: 60px;

@@ -1,5 +1,6 @@
 .header {
     margin-top: 60px;
+    display: grid;
 }
 
 .headerTitles {
@@ -25,6 +26,5 @@
 .headerImg {
     width: 100%;
     height: 450px;
-    margin-top: 80px;
     object-fit: cover;
 }

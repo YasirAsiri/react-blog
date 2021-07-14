@@ -43,6 +43,8 @@
 .sidebarList {
     list-style: none;
     margin-bottom: 30px;
+    display: grid;
+    width: 80%;
 }
 
 .sidebarListItem {

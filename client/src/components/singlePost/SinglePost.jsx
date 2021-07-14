@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useContext  } from 'react'
 import { Context } from '../../context/Context';
+
 import './singlePost.css'
 
 export default function SinglePost() {
@@ -14,15 +15,19 @@ export default function SinglePost() {
     const { user } = useContext(Context);
     const [title, setTitle] = useState('');
     const [desc, setDesc] = useState('');
+    const [author, setAuthor] = useState('');
+
     const [updateMode, setUpdateMode] = useState(false);
 
 
     useEffect(() => {
         const getPost = async () => {
             const res = await axios.get('/posts/' + postID);
+            const getAuthor = await axios.get('/users/' + res.data.author_id);
             setPost(res.data);
             setTitle(res.data.title);
             setDesc(res.data.desc);
+            setAuthor(getAuthor.data);
         };
         getPost();
     }, [postID]);
@@ -30,7 +35,7 @@ export default function SinglePost() {
     const handleDelete = async ()=> {
         try {
             await axios.delete(`/posts/${postID}`, {
-                data: { username: user.username },
+                data: { email: user.email },
             });
             window.location.replace('/');
         } catch (err) {
@@ -41,7 +46,7 @@ export default function SinglePost() {
     const handleUpdate = async ()=> {
         try {
             await axios.put(`/posts/${postID}`, {
-                username: user.username, title, desc
+                title, desc
             });
             setUpdateMode(false);
         } catch (err) {
@@ -66,7 +71,7 @@ export default function SinglePost() {
                     </input> : 
                     <h1 className="singlePostTitle">
                         {title}
-                        {post.username === user?.username &&
+                        {author.email === user?.email &&
                         <div className="singlePostEdit">
                             <i className="singlePostIcon far fa-edit" onClick={()=>setUpdateMode(true)}></i>
                             <i className="singlePostIcon far fa-trash-alt" onClick={handleDelete}></i>
@@ -74,14 +79,16 @@ export default function SinglePost() {
                         }
                     </h1>
                 }
+                {author &&
                 <div className="singlePostInfo">
                     <span className='singlePostAuthor'>Author:
-                    <Link to={`/?user=${post.username}`} className='link'>
-                    <b>{post.username}</b>
+                    <Link to={`/?userID=${author._id}`} className='link'>
+                    <b>{' ' + author.firstName + ' ' + author.lastName}</b>
                     </Link>
                     </span>
                     <span className="singlePostDate">{new Date (post.createdAt).toDateString()}</span>
                 </div>
+                }
                 { updateMode ? (
                     <textarea 
                         className='singlePostDescInput' 

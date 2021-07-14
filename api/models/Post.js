@@ -4,7 +4,6 @@ const PostSchema = new mongoose.Schema({
     title:{
         type: String,
         required: true,
-        unique: true,
     },
     desc: {
         type :String,
@@ -14,9 +13,8 @@ const PostSchema = new mongoose.Schema({
         type: String,
         required: false
     },
-    username:{
-        type: String,
-        required: true,
+    author_id:{
+        type: mongoose.Schema.Types.ObjectId, ref: 'User',
     },
     categories:{
         type: Array,

@@ -19,6 +19,7 @@ mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
+    useFindAndModify: false,
 })
 .then(console.log('Connected to MongoDB'))
 .catch((err) => console.log(err));
@@ -32,8 +33,9 @@ const storage = multer.diskStorage({
     },
 });
 
-const upload = multer({storage});
-app.post('/api/upload', upload.single('file'),(req,res) => {
+const limits = { fileSize: 25 * 1024 * 1024 };
+const upload = multer({storage, limits});
+app.post('/api/upload', upload.single('imageInput'),(req,res) => {
     res.status(200).json('File has been uploaded successfully.');
 })
 

@@ -12,71 +12,93 @@ export default function Write() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const newPost = {
-            username: user.username,
+            author_id: user._id,
             title,
-            desc, 
+            desc,
         };
 
         if (file) {
             const data = new FormData();
-            const fileName = Date.now() + file.name;
+            const fileName = Date.now() + '-' + file.name;
             data.append('name', fileName);
-            data.append('file', file);
+            data.append('imageInput', file);
             newPost.photo = fileName;
 
             try {
                 await axios.post('/upload', data);
             } catch (err) {
-                
+
+            }
+        } else {
+
+            const data = new FormData();
+            const fileName = Date.now() + '-' + Math.random().toString(36).substring(7) + '.jpg';
+            const response = await fetch(document.getElementById('postImage').getAttribute("src"));
+            const fileData = await response.blob();
+            const metadata = {
+                type: 'image/jpeg'
+            };
+
+            const myFile = new File([fileData], "test.jpg", metadata);
+            data.append('name', fileName);
+            data.append('imageInput', myFile);
+            newPost.photo = fileName;
+
+            try {
+                await axios.post('/upload', data);
+
+            } catch (err) {
+                console.log(err);
             }
         }
 
         try {
             const res = await axios.post('/posts', newPost);
             window.location.replace('/post/' + res.data._id);
-        
-        } catch (error) {
-            
+
+        } catch (err) {
+            console.log(err);
         }
     }
 
     return (
         <div className='write'>
-            {file && (
-                <img 
-                src={URL.createObjectURL(file)}
-                alt="" 
+            <img
+                id="postImage"
+                src={file ? URL.createObjectURL(file) : "https://picsum.photos/1000/250"}
+                crossOrigin="anonymous"
+                alt=""
                 className="writeImg"
-                />
-            )}
+            />
+
             <form action="" onSubmit={handleSubmit} className="writeForm">
                 <div className="writeFormGroup">
-                    <label htmlFor="fileInput">
+                    <label htmlFor="imageInput">
                         <i className="writeIcon fas fa-plus"></i>
                     </label>
-                    <input 
-                        type="file" 
-                        id="fileInput"  
-                        style={{display:'none'}} 
-                        onChange={e=>setFile(e.target.files[0])}
+                    <input
+                        type="file"
+                        id="imageInput"
+                        style={{ display: 'none' }}
+                        onChange={e => setFile(e.target.files[0])}
                     />
-                    <input 
-                        type="text" 
-                        id="textInput" 
-                        className='writeInput' 
-                        placeholder='Title' 
+                    <input
+                        type="text"
+                        id="textInput"
+                        className='writeInput'
+                        placeholder='Title'
                         autoFocus={true}
-                        onChange={e=>setTitle(e.target.value)}
-                     />
+                        onChange={e => setTitle(e.target.value)}
+                    />
                 </div>
                 <div className="writeFormGroup">
-                <textarea
-                    placeholder='Tell your story...'
-                    type='text'
-                    className='writeInput writeText'
-                    onChange={e=>setDesc(e.target.value)}
-                >
-                </textarea>
+                    <textarea
+                        placeholder='Tell your story...'
+                        type='text'
+                        className='writeInput writeText'
+                        onChange={e => setDesc(e.target.value)}
+                    >
+                    </textarea>
                 </div>
                 <button type='submit' className="writeSubmit">Publish</button>
             </form>

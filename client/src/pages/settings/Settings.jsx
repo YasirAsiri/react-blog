@@ -9,9 +9,9 @@ export default function Settings() {
     const {user, dispatch} = useContext(Context);
     const [file, setFile] = useState(null);
     const [firstName, setFirstName] = useState(user.firstName);
-    const [lastName, setLastName] = useState(user.LastName);
+    const [lastName, setLastName] = useState(user.lastName);
     const [email, setEmail] = useState(user.email);
-    const [password, setPassword] = useState(user.password);
+    const [password, setPassword] = useState('');
     const [successUpdate, setSuccessUpdate] = useState(false);
     const PF = 'http://localhost:5000/images/';
 
@@ -24,9 +24,12 @@ export default function Settings() {
             userId: user._id,
             firstName,
             lastName,
-            email,
-            password, 
+            email, 
         };
+
+        if (password) {
+            updatedUser.password = password;
+        }
 
         if (file) {
             const data = new FormData();
@@ -85,7 +88,7 @@ export default function Settings() {
                     <label htmlFor="">Email</label>
                     <input type="email" id="email" placeholder={user.email} onChange={e=>setEmail(e.target.value)} />
                     <label htmlFor="">Password</label>
-                    <input type="password" id="password" onChange={e=>setPassword(e.target.value)} />
+                    <input type="password" id="password" onChange={(e)=> e.target.value && setPassword(e.target.value)} />
                     <button className="settingsSubmit" type="submit">Update</button>
                     { successUpdate &&
                         <span 

@@ -23,17 +23,25 @@ export default function Login() {
                 email: userRef.current.value,
                 password: passwordRef.current.value,
             });
-            res.data && dispatch({
-                type: 'LOGIN_SUCCESS',
-                payload: res.data
-            });
+
+            if (res.data.email) {
+                dispatch({
+                    type: 'LOGIN_SUCCESS',
+                    payload: res.data
+                });
+            } else if (res.data.error) {
+                setError(res.data.message);
+                dispatch({
+                    type: 'LOGIN_FAILURE'
+                });
+            }
 
         } catch (err) {
-            setError(err.message);
+            setError(err);
             dispatch({
                 type: 'LOGIN_FAILURE'
             });
-            console.log('Logged' + err);
+            console.log(err);
         }
     };
 
@@ -63,7 +71,7 @@ export default function Login() {
                 <button className="loginRegisterBtn">
                     <Link className='link' to='/register'>Register</Link>
                 </button>
-                {error && <span style={{ color: "red" }}>Something went wrong!</span>}
+                {error && <span style={{ color: "red", marginTop: "10px" }}>{error}</span>}
             </div>
         </div>
     )

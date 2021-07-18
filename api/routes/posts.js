@@ -38,7 +38,8 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const post = await Post.findById(req.params.id);
-        if (post.author.email === req.body.email) {
+
+        if (post.author_id.toString() === req.body.user_id.toString()) {
             try {
                 await post.delete()
                 res.status(200).json('Post has been deleted successfully.');
